@@ -33,6 +33,10 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails'
   gem 'pry'
+  gem 'database_cleaner-active_record'
+  gem 'factory_bot_rails', '~> 5.0'
+  gem 'faker'
+  gem 'rubocop', '~> 1.22', require: false
 end
 
 group :development do
