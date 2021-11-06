@@ -7,6 +7,8 @@ class User < ApplicationRecord
   before_save :downcase_email
   has_secure_password
 
+  has_many :articles, dependent: :destroy
+
   STRONG_PASSWORD = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/.freeze
 
   validates :password, presence: true, format: { with: STRONG_PASSWORD }, on: :create
