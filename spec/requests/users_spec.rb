@@ -61,7 +61,7 @@ RSpec.describe "Users", type: :request do
         result = parse response
 
         expect(response.status).to eq 422
-        expect(result['errors']['password']).to eq ['can\'t be blank', 'can\'t be blank', 'is invalid']
+        expect(result['errors']['password']).to eq ['can\'t be blank', 'is invalid']
       end
     end
   end
