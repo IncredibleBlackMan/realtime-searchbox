@@ -1,0 +1,20 @@
+default: &default
+  adapter: mysql2
+  host: localhost
+  pool: 5
+  timeout: 5000
+  username: 'root'
+  password: 'root'
+  encoding: utf8mb4
+
+development:
+  <<: *default
+  database: 'realtime_searchbox_dev'
+
+test:
+  <<: *default
+  database: 'realtime_searchbox_test'
+
+production:
+  <<: *default
+  database: 'realtime_searchbox_prod'
