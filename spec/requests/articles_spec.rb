@@ -5,6 +5,10 @@ RSpec.describe 'Articles', type: :request do
   let(:user) { create(:user) }
   let(:article) { create(:article) }
 
+  before :each do
+    Article.reindex
+  end
+
   describe 'articles requests' do
     context 'when successful' do
       it 'returns article object' do
@@ -56,6 +60,20 @@ RSpec.describe 'Articles', type: :request do
 
         expect(result['errors']['introduction']).to eq ['can\'t be blank']
         expect(response.status).to eq 422
+      end
+    end
+  end
+
+  describe 'article searches' do
+    context 'when successful' do
+      it 'returns articles object' do
+        get "/articles?query=#{article.title}",
+            headers: { Authorization: "Token #{generate_auth_token}" }
+
+        result = parse response
+        binding.pry
+        expect(result['articles']).to_not be_nil
+        expect(response.status).to eq 200
       end
     end
   end

@@ -1,4 +1,6 @@
 class Article < ApplicationRecord
+  searchkick searchable: %i[title introduction content status]
+
   enum status: {
     draft: 'draft',
     published: 'published'
