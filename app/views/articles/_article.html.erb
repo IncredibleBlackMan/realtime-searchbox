@@ -1,0 +1,17 @@
+<div class="container">
+  <% if @articles.present? %>
+    <% @articles[:articles].each do |article| %>
+      <div class="article-title">
+        <%= link_to article_path(article) do %>
+          <h2><%= article.title %></h2>
+        <% end %>
+      </div>
+      <div class="article-meta-data">
+        <div class="article-author">By <%= article.user.first_name %></div> |
+        <div class="article-created-date"><%= article.created_at.strftime("%d-%m-%Y") %></div>
+      </div>
+      <div class="article-content"><%= article.introduction %></div>
+
+    <% end %>
+  <% end %>
+</div>

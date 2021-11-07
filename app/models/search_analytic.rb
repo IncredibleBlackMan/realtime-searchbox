@@ -1,4 +1,5 @@
 class SearchAnalytic < AnalyticsRecord
+  belongs_to :user
   before_save :increase_count
 
   def increase_count

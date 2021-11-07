@@ -7,13 +7,16 @@ RSpec.describe 'Articles', type: :request do
 
   before :each do
     Article.reindex
+    # allow_any_instance_of(Rack::Test::CookieJar).to receive(:signed) { |object| object }
+    # allow_any_instance_of(ActionDispatch::Cookies::CookieJar).to receive(:signed) { |object| object }
   end
 
   describe 'articles requests' do
     context 'when successful' do
       it 'returns article object' do
-        post '/articles', params: article_params,
-                          headers: { Authorization: "Token #{generate_auth_token}" }
+        set_cookie_headers
+
+        post '/articles', params: article_params
 
         result = parse response
 
@@ -26,15 +29,13 @@ RSpec.describe 'Articles', type: :request do
       it 'returns error when user is unauthenticated' do
         post '/articles', params: article_params
 
-        result = parse response
-
-        expect(result['errors']).to eq 'You\'re not authorised to access this resource.'
-        expect(response.status).to eq 401
+        expect(response).to redirect_to('/login')
       end
 
       it 'returns error when title is empty' do
-        post '/articles', params: article_params.merge(title: ''),
-                          headers: { Authorization: "Token #{generate_auth_token}" }
+        set_cookie_headers
+
+        post '/articles', params: article_params.merge(title: '')
 
         result = parse response
 
@@ -43,8 +44,9 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it 'returns error when content is empty' do
-        post '/articles', params: article_params.merge(content: ''),
-                          headers: { Authorization: "Token #{generate_auth_token}" }
+        set_cookie_headers
+
+        post '/articles', params: article_params.merge(content: '')
 
         result = parse response
 
@@ -53,8 +55,9 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it 'returns error when introduction is empty' do
-        post '/articles', params: article_params.merge(introduction: ''),
-                          headers: { Authorization: "Token #{generate_auth_token}" }
+        set_cookie_headers
+
+        post '/articles', params: article_params.merge(introduction: '')
 
         result = parse response
 
@@ -67,12 +70,11 @@ RSpec.describe 'Articles', type: :request do
   describe 'article searches' do
     context 'when successful' do
       it 'returns articles object' do
-        get "/articles?query=#{article.title}",
-            headers: { Authorization: "Token #{generate_auth_token}" }
+        set_cookie_headers
 
-        result = parse response
-        binding.pry
-        expect(result['articles']).to_not be_nil
+        get "/articles?query=#{article.title}"
+
+        expect(response).to render_template('index')
         expect(response.status).to eq 200
       end
     end
@@ -86,8 +88,11 @@ RSpec.describe 'Articles', type: :request do
     }
   end
 
-  def generate_auth_token
-    JsonWebToken.encode(user_id: user['id'])
+  def set_cookie_headers
+    my_cookies = ActionDispatch::Request.new(Rails.application.env_config.deep_dup).cookie_jar
+    my_cookies.signed[:jwt] = JsonWebToken.encode(user_id: user['id'])
+
+    cookies[:jwt] = my_cookies[:jwt]
   end
 
   def parse(response)

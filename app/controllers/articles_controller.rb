@@ -1,15 +1,18 @@
 class ArticlesController < ApplicationController
   before_action :find_article, only: %i[show]
+
   def index
     @articles = ArticleSearch.new(
-      query: params[:query]
+      query: params[:query],
+      user: current_user
     ).search
-
-    render json: @articles, status: :ok
   end
 
   def show
-    render json: @article, status: :ok
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def create

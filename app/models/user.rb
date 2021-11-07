@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :articles, dependent: :destroy
+  has_many :search_analytics, dependent: :destroy
 
   STRONG_PASSWORD = /(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}/.freeze
 

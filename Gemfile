@@ -26,11 +26,18 @@ gem 'jwt'
 
 gem 'searchkick'
 
+gem 'bootstrap-sass'
+
+gem 'faraday_middleware-aws-sigv4'
+
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
+
+gem 'faker'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -39,9 +46,9 @@ group :development, :test do
   gem 'pry'
   gem 'database_cleaner-active_record'
   gem 'factory_bot_rails', '~> 5.0'
-  gem 'faker'
   gem 'rubocop', '~> 1.22', require: false
   gem 'shoulda-matchers', '~> 4.1'
+  gem 'rails-controller-testing'
 end
 
 group :development do

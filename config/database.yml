@@ -1,38 +1,40 @@
+
 default: &default
-  adapter: mysql2
-  host: localhost
-  pool: 5
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  username: 'root'
-  password: 'root'
-  encoding: utf8mb4
 
 development:
-  <primary:
+  primary:
     <<: *default
-    database: 'realtime_searchbox_prod'
+    database: 'realtime_searchbox_dev'
 
   analytics:
     <<: *default
-    database: 'realtime_searchbox_analytics_prod'
+    database: 'realtime_searchbox_analytics'
     migrations_paths: db/analytics_migrate
-    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
+
+staging:
+  <<: *default
+  database: 'realtime_searchbox_staging'
 
 test:
-  <primary:
+  primary:
     <<: *default
-    database: 'realtime_searchbox_prod'
+    database: 'realtime_searchbox_test'
 
   analytics:
     <<: *default
-    database: 'realtime_searchbox_analytics_prod'
+    database: 'realtime_searchbox_analytics_test'
     migrations_paths: db/analytics_migrate
-    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
+
 
 production:
   <primary:
     <<: *default
     database: 'realtime_searchbox_prod'
+    url: <%= ENV["DATABASE_URL"] %>
 
   analytics:
     <<: *default

@@ -5,6 +5,12 @@ Rails.application.routes.draw do
 
   resources :articles, only: %i[create index show]
 
-  resources :sessions, only: %i[create]
+  post '/login', to: 'sessions#create'
+
+  resources :search_analytics, only: %i[index]
+
+  get 'login', to: 'sessions#new'
+
+  get '/', to: redirect('/login')
 
 end

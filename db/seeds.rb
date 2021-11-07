@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'faker'
+# require 'faker'
 
 puts '== Seeding the database =='
 
 puts '== Creating users =='
 
 10.times do |i|
-  user = User.create!(
+  user = User.find_or_create_by!(
     email: "example#{i + 1}@helpjuice.com",
     first_name: Faker::Name.first_name,
     last_name: Faker::Name.last_name,
@@ -18,10 +18,10 @@ puts '== Creating users =='
 
 end
 
-puts '== Creatings articles =='
+puts '== Creating articles =='
 
 50.times do
-  Article.create(
+  Article.create!(
     user_id: [*1..10].sample,
     title: Faker::Lorem.sentence,
     introduction: Faker::Lorem.paragraph(sentence_count: 8),
