@@ -1,0 +1,20 @@
+<div class="container">
+  <table class="analytics-table">
+    <thead>
+    <tr>
+      <th>Search text</th>
+      <th>User</th>
+      <th>Count</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% @search_analytics.each do |data| %>
+        <tr>
+          <td><%= data.text %></td>
+          <td><%= data.user.first_name %></td>
+          <td><%= data.count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

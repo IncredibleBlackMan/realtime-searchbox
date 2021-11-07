@@ -18,8 +18,10 @@ ActiveRecord::Schema.define(version: 2021_11_06_194601) do
   create_table "search_analytics", force: :cascade do |t|
     t.string "text"
     t.integer "count", default: 0, null: false
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_search_analytics_on_user_id"
   end
 
 end

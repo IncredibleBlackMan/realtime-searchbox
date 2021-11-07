@@ -13,19 +13,16 @@ class ApplicationController < ActionController::Base
     @current_user_id = session[:user_id]
 
     if @current_user_id.blank?
-      if request.headers['Authorization'].present?
-        authenticate_or_request_with_http_token do |token|
-          jwt_payload = JsonWebToken.decode(token).first
-          @current_user_id = jwt_payload['user_id']
-        rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-          @has_error = true
-        end
+      token = request.headers['Authorization'] || cookies.signed[:jwt]
+      begin
+        jwt_payload = JsonWebToken.decode(token).first
+        @current_user_id = jwt_payload['user_id']
+      rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+        @has_error = true
       end
     end
 
-    if @current_user_id.blank? || @has_error
-      render(json: { errors: 'You\'re not authorised to access this resource.' }, status: :unauthorized)
-    end
+    redirect_to '/sessions' if @current_user_id.blank? || @has_error
   end
 
   def user_signed_in?

@@ -7,4 +7,8 @@ Rails.application.routes.draw do
 
   resources :sessions, only: %i[create]
 
+  resources :search_analytics, only: %i[index]
+
+  get 'sessions', to: 'sessions#new'
+
 end

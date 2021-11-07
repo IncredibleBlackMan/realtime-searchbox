@@ -1,16 +1,22 @@
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_request!, only: %i[create]
+  skip_before_action :authenticate_request!, only: %i[create new]
   before_action :find_user, only: %i[create]
 
   def create
     if session_params[:password] && @user&.authenticate(session_params[:password])
       auth_token = JsonWebToken.encode(user_id: @user.id)
-      render json: {
-        user: @user,
-        auth_token: auth_token
-      }, status: :ok
+      cookies.signed[:jwt] = { value: auth_token, httponly: true }
+
+      redirect_to '/articles'
     else
-      render json: { errors: 'Invalid email / password' }, status: :unauthorized
+      redirect_to '/session'
+    end
+  end
+
+  def new
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 
